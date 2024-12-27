@@ -5,17 +5,22 @@ import { socketHandlers } from './socket/socketHandlers.js';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
-const server = http.createServer(app); 
+
+app.use(cors({
+    origin: "https://muntajir11.github.io", 
+    methods: ["GET", "POST"]
+}));
+
+const server = http.createServer(app);
+
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://10.0.2.2:8081"], // Allow both web and emulator origins
+        origin: "https://muntajir11.github.io", 
         methods: ["GET", "POST"]
     }
 });
 
 const PORT = process.env.PORT || 5000;
-
 socketHandlers(io);
 
 server.listen(PORT, () => {

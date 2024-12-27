@@ -12,10 +12,12 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
+      #online-users { position: absolute; top: 1rem; right: 1rem; font-size: 1.2rem; color: #333; }
   </style>
 </head>
 <body>
   <h3 id="heading">Waiting for a match . . . !</h3>
+  <div id="online-users">Online Users: 0</div>
   <ul id="messages"></ul>
 
   <form id="form" action="">
@@ -26,12 +28,13 @@
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <script>
-    const socket = io('http://localhost:5000');
+    // const socket = io('http://localhost:5000'); 
+    const socket = io('https://anonymous-chat-server-cauu.onrender.com'); 
     let roomId = null;
 
     socket.on('matched', ({ roomId, partnerId }) => {
         console.log(`You are matched with user ${partnerId}`);
-        document.getElementById('heading').textContent = `You are matched with user ${partnerId}`;
+        document.getElementById('heading').textContent = `You are matched with a stranger!!`;
         window.roomId = roomId; 
         console.log("Room ID set:", roomId); 
     });
@@ -40,13 +43,17 @@
         console.table(data);
         
         const item = document.createElement('li');
-        item.textContent = `${data.senderId}: ${data.msg}`;
+        item.textContent = `Stranger : ${data.msg}`;
         document.getElementById('messages').appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
     });
 
     socket.on('user disconnected', (userId) => {
         document.getElementById('heading').textContent = `Stranger disconnected.`;
+    });
+
+    socket.on('onlineUsers', (count) => {
+        document.getElementById('online-users').textContent = `Online Users: ${count}`;
     });
 
     document.getElementById('send').addEventListener('click', (event) => {
@@ -68,13 +75,13 @@
     });
 
     document.getElementById('disconnect').addEventListener('click', () => {
-  if (window.roomId) {
-    socket.disconnect(); 
-    window.roomId = null; 
-    document.getElementById('heading').textContent = 'Waiting for a match . . . !';
-    document.getElementById('messages').innerHTML = ''; 
-  }
-});
+      if (window.roomId) {
+        socket.disconnect(); 
+        window.roomId = null; 
+        document.getElementById('heading').textContent = 'Waiting for a match . . . !';
+        document.getElementById('messages').innerHTML = ''; 
+      }
+    });
 
   </script>
 </body>

@@ -1,8 +1,12 @@
 let queue = [];
+let onlineUsers = 0;
 
 export const socketHandlers = io => {
   io.on('connection', socket => {
-    console.log('A user connected: ' + socket.id);
+    onlineUsers++;
+
+    console.log(`A user connected. Total online users: ${onlineUsers}`);
+    io.emit('onlineUsers', onlineUsers);
 
     queue.push(socket);
 
@@ -49,7 +53,10 @@ export const socketHandlers = io => {
 
 
     socket.on('disconnect', () => {
-      console.log('User disconnected: ' + socket.id);
+      onlineUsers--;
+      console.log(`A user disconnected. Total online users: ${onlineUsers}`);
+
+      io.emit('onlineUsers', onlineUsers);
 
       const index = queue.indexOf(socket);
       if (index > -1) {
