@@ -5,7 +5,9 @@ export const socketHandlers = io => {
   io.on('connection', socket => {
     onlineUsers++;
 
-    console.log(`A user connected. Total online users: ${onlineUsers}`);
+    // console.log(`A user connected. Total online users: ${onlineUsers}`);
+    console.log(`Total online users: ${onlineUsers}`);
+    console.log(`$(queue.length) users in queue`);
     io.emit('onlineUsers', onlineUsers);
 
     queue.push(socket);
