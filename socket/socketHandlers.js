@@ -57,7 +57,10 @@ export const socketHandlers = io => {
 
     socket.on('disconnect', () => {
       onlineUsers--;
-      console.log(`A user disconnected. Total online users: ${onlineUsers}`);
+      // console.log(`A user disconnected. Total online users: ${onlineUsers}`);
+
+      console.log(`Total online users: ${onlineUsers}`);
+      console.log(`${queue.length} users in queue`);
 
       io.emit('onlineUsers', onlineUsers);
 
