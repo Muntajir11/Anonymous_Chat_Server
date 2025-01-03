@@ -6,13 +6,15 @@ export const socketHandlers = io => {
     onlineUsers++;
 
     // console.log(`A user connected. Total online users: ${onlineUsers}`);
-  console.log(`Total online users: ${onlineUsers}`);
-   console.log(`${queue.length} users in queue`);
+
 
     io.emit('onlineUsers', onlineUsers);
 
     queue.push(socket);
 
+    console.log(`Total online users: ${onlineUsers}`);
+    console.log(`${queue.length} users in queue`);
+    
     if (queue.length >= 2) {
       const user1 = queue.pop();
       const user2 = queue.pop();
@@ -59,8 +61,7 @@ export const socketHandlers = io => {
       onlineUsers--;
       // console.log(`A user disconnected. Total online users: ${onlineUsers}`);
 
-      console.log(`Total online users: ${onlineUsers}`);
-      console.log(`${queue.length} users in queue`);
+
 
       io.emit('onlineUsers', onlineUsers);
 
@@ -69,6 +70,9 @@ export const socketHandlers = io => {
         queue.splice(index, 1);
       }
 
+      console.log(`Total online users: ${onlineUsers}`);
+      console.log(`${queue.length} users in queue`);
+      
       const roomId = socket.roomId;
       if (roomId) {
         io.to(roomId).emit('user disconnected', socket.id);
